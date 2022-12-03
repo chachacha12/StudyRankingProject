@@ -1,32 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:studyrankingproject/LoginWedget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'StudyRanking.dart';
-import 'Todolist.dart';
+Future<void> main() async {
+  /*
+  UserBuilder test2 = UserBuilder("idTest", "passwordTest", "nicknameTest");
+  User test = User(test2.setGrade(3).setMajor("majorTest").setUniversity("universityTest").setGender(1));
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 
-void main() {
-  runApp(
-      ChangeNotifierProvider(
-          create: (c) => Store1(),
-          child: MaterialApp(
-              home: MyApp()
-          )
-      )
-  );
+  readData();
+  */
+  runApp(const MyApp());
 }
-
-//state보관함 store
-class Store1 extends ChangeNotifier {
-
-  var tab =0;  //바텀바에서 유저가 누를때 페이지전환 시켜주기위한 state
-  //tab값 변경함수
-  ChangeTab(i){
-    tab = i;
-    notifyListeners();
-  }
-}
-
-
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -37,40 +23,23 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      //리스트안에 두 페이지 넣어서 유저가 바텀탭 누를때마다 각각 전환
-      body: [
-        Todolist(), StudyRanking()
-      ][context.watch<Store1>().tab],  //Store1안의 state를 가져옴
-
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: context.watch<Store1>().tab,
-
-        showSelectedLabels: false,
-        showUnselectedLabels:false,
-        iconSize: 25.0,
-        selectedIconTheme: IconThemeData(
-            color: Colors.black
-        ),
-        unselectedIconTheme: IconThemeData(
-            color: Colors.grey
-        ),
-        elevation: 2,
-        backgroundColor: Colors.white,
-        //selectedFontSize: 14, //선택된 아이템의 폰트사이즈
-        //unselectedFontSize: 14, //선택 안된 아이템의 폰트사이즈
-        items: [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home), label: ' Todolist'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle_rounded), label: ' Ranking'),
-        ],
-        onTap: (i){    //i는 바텀네비게이션에서 누르는 버튼 순서번호임. 첫번째 버튼 누르면 i는 0이됨.
-          setState(() => context.read<Store1>().ChangeTab(i));
-        },
-      ),
+    return MaterialApp(
+      home: LoginWidget(),
     );
   }
 }
 
 
+void readData(){
+  final userCollectionReference = FirebaseFirestore.instance.collection("UserData").doc("uKM3J5yhIbIR0s5db3Mt");
+  userCollectionReference.get().then((value)=>{
+    print(value.data()!['id']),
+    print(value.data()!['password']),
+    print(value.data()!['nickname']),
+    print(value.data()!['university']),
+    print(value.data()!['major']),
+    print(value.data()!['grade']),
+    print(value.data()!['gender'])
+  });
+  // 테스트를 위한 함수.
+}

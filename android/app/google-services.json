@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "863201303164",
+    "project_id": "studyrankingproject",
+    "storage_bucket": "studyrankingproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:863201303164:android:d2162108f27794564487f9",
+        "android_client_info": {
+          "package_name": "com.example.studyrankingproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "863201303164-b015eg07o49bo25strdim4kkl6t4l5t6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDW51__E2zh56kKX9YcJsqIsNG4sYYcmWc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "863201303164-b015eg07o49bo25strdim4kkl6t4l5t6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
