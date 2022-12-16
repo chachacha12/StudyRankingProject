@@ -15,7 +15,7 @@ void main() {
   );
 }
 
-//state보관함 store
+//state보관함 store - Provider패턴 적용
 class Store1 extends ChangeNotifier {
 
   var tab =0;  //바텀바에서 유저가 누를때 페이지전환 시켜주기위한 state

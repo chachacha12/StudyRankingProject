@@ -11,7 +11,10 @@ class Todolist extends StatefulWidget {
 class _TodolistState extends State<Todolist> {
 
   List todos = [];
+  List check_color = [];  //완료된 리스트인지 체크
   String input = "";
+
+
 
   @override
   void initState() {
@@ -39,6 +42,7 @@ class _TodolistState extends State<Todolist> {
                       FlatButton(onPressed: (){
                         setState(() {
                           todos.add(input);
+                          check_color.add(Colors.grey);
                         });
                         Navigator.of(context).pop();	// input 입력 후 창 닫히도록
                       },
@@ -85,7 +89,7 @@ class _TodolistState extends State<Todolist> {
                             title: Text(todos[index]),
                             leading: Icon(          //완료된 것인지 나타내는 체크아이콘
                               Icons.check,
-                              color: Colors.blue,
+                              color: check_color[index],
                             ),
                             trailing: IconButton(icon: Icon(  //삭제버튼
                               Icons.delete,
@@ -113,7 +117,7 @@ class _TodolistState extends State<Todolist> {
                                   actions: <Widget>[
                                     FlatButton(onPressed: (){
                                       setState(() {
-
+                                        check_color[index] = Colors.blue;  //공부시간 입력후엔 체크버튼 색상 변경
                                       });
                                       Navigator.of(context).pop();	// input 입력 후 창 닫히도록
                                     },
