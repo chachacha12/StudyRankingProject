@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'main.dart';
 
 
 class Todolist extends StatefulWidget {
@@ -14,13 +15,10 @@ class _TodolistState extends State<Todolist> {
   List check_color = [];  //완료된 리스트인지 체크
   String input = "";
 
-
-
   @override
   void initState() {
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +58,7 @@ class _TodolistState extends State<Todolist> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
+
             pinned: true,
             expandedHeight: 230.0,
             flexibleSpace: FlexibleSpaceBar(

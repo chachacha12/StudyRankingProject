@@ -1,4 +1,4 @@
-name: studyrankingproject
+name: theme
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -29,13 +29,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  provider: ^6.0.1
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  get: ^4.6.5
 
 dev_dependencies:
   flutter_test:
@@ -53,8 +51,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-  assets:
-    - assets/todolist.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

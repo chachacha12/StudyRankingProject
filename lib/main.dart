@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
-
 import 'StudyRanking.dart';
 import 'Todolist.dart';
 
@@ -8,8 +11,10 @@ void main() {
   runApp(
       ChangeNotifierProvider(
           create: (c) => Store1(),
-          child: MaterialApp(
-              home: MyApp()
+          child: GetMaterialApp(
+              theme: ThemeData(),
+              darkTheme: ThemeData.dark(),
+              home:  MyApp()
           )
       )
   );
@@ -26,18 +31,34 @@ class Store1 extends ChangeNotifier {
   }
 }
 
-
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
+
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
+
+      appBar: AppBar(
+        title: Text('Peer Stuty', ),
+        leading: IconButton(
+          icon: Icon(Icons.dark_mode),
+          onPressed: (){
+            //다크모드 변경
+            Get.changeTheme(
+              Get.isDarkMode ? ThemeData.light() : ThemeData.dark(),
+            );
+          },
+        ),
+
+      ),
+
       //리스트안에 두 페이지 넣어서 유저가 바텀탭 누를때마다 각각 전환
       body: [
         Todolist(), StudyRanking()
@@ -72,5 +93,18 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
