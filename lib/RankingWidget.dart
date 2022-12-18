@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:studyrankingproject/DailyRanking.dart';
 import 'package:studyrankingproject/SemesterRanking.dart';
 
-import 'UserDetail.dart';
 
 
 class StudyRanking extends StatefulWidget {
@@ -19,9 +18,16 @@ class _StudyRankingState extends State<StudyRanking> {
   int _index = 0;
   Widget build(BuildContext context) {
     var temp = FirebaseAuth.instance.currentUser!.uid.toString();
-    print(temp);
+    var nickname;
+    var studyTime;
+    FirebaseFirestore.instance.collection("UserData").doc(temp).get().then(
+            (DocumentSnapshot ds){
+              nickname = ds.get("nickname");
+              studyTime = ds.get("${_list[_index].getWhichRanking().toLowerCase()}studytime");
+              print(nickname);
+              print(studyTime);
+            });
     _list[_index].updateRankerList();
-    print("${_list[_index].rankerList}외부값확인");
     return Container(
         child: Column(
           children: [
@@ -43,34 +49,78 @@ class _StudyRankingState extends State<StudyRanking> {
             Container(
               height: 500,
               width: 340,
-              child:SingleChildScrollView(
-                  child:Column(
-                    children: [
-                      for(int i=1;i<21;i++)
-                        Container(
-                          decoration: BoxDecoration(border: Border(bottom: BorderSide())),
-                          height: 80, width: 340,
-                          child:Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children:[
-                                Container(
-                                  margin: EdgeInsets.symmetric(vertical: 20),
-                                  child:Text("$i",style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold))
-                                ),
-                                Container(
-                                  child: Text(_list[_index].rankerList.length.toString()),
-                                ),
-                                Container(
-                                  //리스트의 값을 제대로 읽지 못하는 버그가 있음.
-                                  //child: Text(_list[_index].rankerList.length.toString()),
-                                )
-                              ]
-                            )
-                          )
-                    ],
-                  )
-                )
+              child:StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance.collection("UserData").orderBy("${_list[_index].getWhichRanking().toLowerCase()}studytime",descending:true ).limit(20).snapshots(),
+                builder: (context, snapshot) {
+                  final items = snapshot.data?.docs;
+                  return ListView.builder(
+                    itemCount: items?.length,
+                    itemBuilder: (context, index){
+                      final item =items?[index];
+                      return Container(
+                          decoration: BoxDecoration(
+                            border: Border(bottom: BorderSide(color: Colors.grey)),
+                          ),
+                          child:ListTile(
+                          leading: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                            child:Text("${index+1})",
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)
+                          ,)
+                        ),
+                        title: Text(item?["nickname"],style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+
+                        subtitle: Text(item!["${_list[_index].getWhichRanking().toLowerCase()}studytime"].toString()+"분"
+                        ,style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)
+                        ),
+                      )
+                      );
+
+                    },
+                  );
+
+                },
+              )
             ),
+
+            FutureBuilder(
+              future: FirebaseFirestore.instance.collection("UserData").doc(temp).get(),
+              builder: (context, snapshot) {
+                if(nickname == null){
+                  return ListTile(
+                    leading: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                        child:Text("You",
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),)
+                    ),
+                    title: Text("nickname",style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                    subtitle: Text("0분"
+                        ,style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)
+                    ),
+                  );
+                  }
+                  else{
+                    print("오");
+                    return Container(
+                        decoration: BoxDecoration(
+                          border: Border(bottom: BorderSide(color: Colors.grey), top: BorderSide(color: Colors.grey)),
+                        ),
+                        child : ListTile(
+                        leading: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                          child:Text("You",
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),)
+                        ),
+                        title: Text(nickname,style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                        subtitle: Text("$studyTime분"
+                          ,style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)
+                        ),
+                      )
+                    );
+                  }
+                }
+            ),
+
             Container(
               child: TextButton(
                 child: Text("${_list[1-_index].getWhichRanking()} Ranking",
@@ -94,6 +144,8 @@ abstract class Ranking{
   Future<void> updateRankerList();
   String getWhichRanking();
   get rankerList => _rankerList;
+
+  Future<QuerySnapshot<Object?>> getUpdateRankerList();
 }
 /*
 

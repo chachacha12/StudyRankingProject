@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:studyrankingproject/RankingWidget.dart';
-import 'package:studyrankingproject/UserDetail.dart';
 
 class SemesterRanking implements Ranking{
   late List _rankerList;
@@ -16,11 +15,17 @@ class SemesterRanking implements Ranking{
       String tempNick = await doc["nickname"];
       int tempTime = await doc["dailystudytime"];
       temp.add([tempNick,tempTime]);
-      print(doc["nickname"]);
+      //print(doc["nickname"]);
       if(doc == querySnapshot.docs.last){
         _rankerList = temp;
       }
     }
+  }
+  @override
+  Future<QuerySnapshot<Object?>> getUpdateRankerList() async {
+    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection("UserData").orderBy("semesterstudytime").limit(20).get();
+
+    return querySnapshot;
   }
 
   @override
