@@ -33,7 +33,7 @@ class _MyAppState extends State<MyApp> {
       valueListenable: darkModeSingleton.themeNotifier,
       builder: (_, ThemeMode currentMode, __){
         return MaterialApp(
-          home: Todolist(),  //LoginWidget(),
+          home: LoginWidget(),
           darkTheme: ThemeData.dark(),
           themeMode: currentMode,
         );

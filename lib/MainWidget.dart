@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'DarkMode.dart';
 import 'RankingWidget.dart';
 import 'Todolist.dart';
 
@@ -31,6 +32,15 @@ class _MainWidgetState extends State<MainWidget> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
+
+      appBar: AppBar(title: Text('Peer  Study'),
+          centerTitle: true,
+          elevation: 0.0,
+          actions: [
+        DarkMode().darkModeButton() //다크모드 사용을 위한 싱글톤 객체 가져옴
+      ]),
+
+
       //리스트안에 두 페이지 넣어서 유저가 바텀탭 누를때마다 각각 전환
       body: [
         Todolist(), StudyRanking()

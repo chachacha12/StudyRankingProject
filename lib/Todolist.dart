@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 
+
+final auth = FirebaseAuth.instance;
 final firestore = FirebaseFirestore.instance;
+
+//누적공부시간과 일일 공부시간을 잠시 저장할 변수
+var dailystudytime;
+var semesterstudytime;
 
 class Todolist extends StatefulWidget {
   const Todolist({Key? key}) : super(key: key);
@@ -18,9 +25,7 @@ class _TodolistState extends State<Todolist> {
   List check_color = [];  //완료된 리스트인지 체크
   String input = "";
 
-  //누적공부시간과 일일 공부시간을 잠시 저장할 변수
-  var dailystudytime=0;
-  var semesterstudytime =0;
+
 
   //사용자가 입력한 공부시간 텍스트필드값 받아오기 위함
   var inputData = TextEditingController();
@@ -80,9 +85,9 @@ class _TodolistState extends State<Todolist> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-
+            automaticallyImplyLeading: false,
             pinned: true,
-            expandedHeight: 230.0,
+            expandedHeight: 50.0,
             flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
               title:  Text('TodoList',
@@ -92,9 +97,11 @@ class _TodolistState extends State<Todolist> {
                   fontWeight: FontWeight.w600,
                 ),),
 
+             /*
               background: Image.asset(
                 'assets/todolist.png',
                 fit: BoxFit.fill,),
+              */
             ),
           ),
           SliverList(
@@ -145,15 +152,19 @@ class _TodolistState extends State<Todolist> {
                                       setState(() {
                                         check_color[index] = Colors.blue;  //공부시간 입력후엔 체크버튼 색상 변경
 
-                                        var data = int.parse(inputData.text);
+                                        var hour_min = inputData.text.split(':');
+                                        var hour =int.parse(hour_min[0]);
+                                        var min = int.parse(hour_min[1]);
+                                        var data = hour*60 + min;
+
                                         //일일공부시간 누적 저장
-                                        firestore.collection('UserData').doc('pARtPJpHyCo4JYmdm22A').update({'dailystudytime' : data+dailystudytime});
-
+                                        firestore.collection('UserData').doc(auth.currentUser?.uid).update({'dailystudytime' : data+dailystudytime});
                                         //학기공부시간 뉘적 저장
-                                        firestore.collection('UserData').doc('pARtPJpHyCo4JYmdm22A').update({'semesterstudytime' : data+semesterstudytime});
+                                        firestore.collection('UserData').doc(auth.currentUser?.uid).update({'semesterstudytime' : data+semesterstudytime});
 
-
-
+                                        //값 업데이트
+                                        dailystudytime =  data+dailystudytime;
+                                        semesterstudytime = data+semesterstudytime;
 
                                       });
                                       Navigator.of(context).pop();	// input 입력 후 창 닫히도록
