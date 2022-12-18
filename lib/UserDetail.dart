@@ -1,6 +1,6 @@
 import 'package:studyrankingproject/UserBuilder.dart';
 
-class User{
+class UserDetail{
   late String _id;
   late String _password;
   late String _nickname;
@@ -9,7 +9,7 @@ class User{
   int? _grade;
   int? _gender;
 
-  User(UserBuilder builder){
+  UserDetail(UserBuilder builder){
     _id = builder.id;
     _password = builder.password;
     _nickname = builder.nickname;

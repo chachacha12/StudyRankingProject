@@ -1,12 +1,12 @@
 
 
 
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyrankingproject/EnrollWidget.dart';
 import 'package:studyrankingproject/MainWidget.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginWidget extends StatefulWidget{
   const LoginWidget({Key? key}) : super(key: key);
@@ -18,14 +18,40 @@ class LoginWidget extends StatefulWidget{
 }
 
 class _LoginWidget extends State<LoginWidget>{
+
+  final TextEditingController _idController = TextEditingController();
+  final TextEditingController _pwController = TextEditingController();
+
+  void _login(BuildContext context) async {
+    print(_idController);
+    print(_pwController);
+    try {
+      final UserCredential user = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+          email: _idController.text, password: _pwController.text);
+      Navigator.push(context,
+          MaterialPageRoute(builder: ((context)=>
+              ChangeNotifierProvider(
+                  create: (c) => StateNotifier(),
+                  child: MainWidget()
+              )
+          ))
+      );
+    } on FirebaseAuthException catch (e) {
+      Fluttertoast.showToast(
+          msg: "아이디(이메일) 혹은 비밀번호를 확인하세요",
+          backgroundColor: Colors.red,
+          gravity: ToastGravity.BOTTOM);
+      print("login error");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double widgetWidth = MediaQuery.of(context).size.width * 0.85;
     TextStyle textButtonStyle = TextStyle(
       fontSize: 12,
     );
-
-
     return Scaffold(
         body: SafeArea(
             child: SingleChildScrollView(
@@ -51,18 +77,19 @@ class _LoginWidget extends State<LoginWidget>{
                             width: widgetWidth,
                             padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
                             child: TextFormField(
-                                keyboardType: TextInputType.emailAddress,
-                                decoration: const InputDecoration(
-                                    labelText: 'id',
-                                    border: OutlineInputBorder(
-                                        borderSide:
-                                        BorderSide(color: Colors.orange)),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5)),
-                                        borderSide: BorderSide(
-                                            color: Colors.orange)
-                                    )
+                              controller: _idController,
+                              keyboardType: TextInputType.emailAddress,
+                              decoration: const InputDecoration(
+                                  labelText: 'id',
+                                  border: OutlineInputBorder(
+                                      borderSide:
+                                      BorderSide(color: Colors.orange)),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(5)),
+                                      borderSide: BorderSide(
+                                          color: Colors.orange)
+                                  )
                                 )
                             )
                         ),
@@ -70,6 +97,7 @@ class _LoginWidget extends State<LoginWidget>{
                             width: widgetWidth,
                             padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
                             child: TextFormField(
+                                controller: _pwController,
                                 decoration: InputDecoration(
                                     labelText: 'password',
                                     suffixIcon: IconButton(
@@ -101,15 +129,7 @@ class _LoginWidget extends State<LoginWidget>{
                                         ),
                                     padding: EdgeInsets.zero,
                                     minimumSize: Size(widgetWidth - 4, 40)),
-                                onPressed: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: ((context)=>
-                                      ChangeNotifierProvider(
-                                          create: (c) => Store1(),
-                                          child: MainWidget()
-                                      )
-                                  ))
-                                ),
+                                onPressed: () => _login(context),
                                 child: Text("로그인",
                                     style: TextStyle(color: Colors.white)))),
                         Row(

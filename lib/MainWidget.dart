@@ -1,13 +1,14 @@
 
 //state보관함 store
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'StudyRanking.dart';
+import 'RankingWidget.dart';
 import 'Todolist.dart';
 
-class Store1 extends ChangeNotifier {
+class StateNotifier extends ChangeNotifier {
 
   var tab =0;  //바텀바에서 유저가 누를때 페이지전환 시켜주기위한 state
   //tab값 변경함수
@@ -26,16 +27,17 @@ class MainWidget extends StatefulWidget {
 }
 
 class _MainWidgetState extends State<MainWidget> {
+
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
       //리스트안에 두 페이지 넣어서 유저가 바텀탭 누를때마다 각각 전환
       body: [
         Todolist(), StudyRanking()
-      ][context.watch<Store1>().tab],  //Store1안의 state를 가져옴
+      ][context.watch<StateNotifier>().tab],  //Store1안의 state를 가져옴
 
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: context.watch<Store1>().tab,
+        currentIndex: context.watch<StateNotifier>().tab,
 
         showSelectedLabels: false,
         showUnselectedLabels:false,
@@ -57,7 +59,7 @@ class _MainWidgetState extends State<MainWidget> {
               icon: Icon(Icons.account_circle_rounded), label: ' Ranking'),
         ],
         onTap: (i){    //i는 바텀네비게이션에서 누르는 버튼 순서번호임. 첫번째 버튼 누르면 i는 0이됨.
-          setState(() => context.read<Store1>().ChangeTab(i));
+          setState(() => context.read<StateNotifier>().ChangeTab(i));
         },
       ),
     );
