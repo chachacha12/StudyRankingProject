@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
+
+final firestore = FirebaseFirestore.instance;
 
 class Todolist extends StatefulWidget {
   const Todolist({Key? key}) : super(key: key);
@@ -15,9 +18,28 @@ class _TodolistState extends State<Todolist> {
   List check_color = [];  //완료된 리스트인지 체크
   String input = "";
 
+  //누적공부시간과 일일 공부시간을 잠시 저장할 변수
+  var dailystudytime=0;
+  var semesterstudytime =0;
+
+  //사용자가 입력한 공부시간 텍스트필드값 받아오기 위함
+  var inputData = TextEditingController();
+
+  //누적공부시간 일일 공부시간 데이터 가져오기
+  getData() async {
+    var result = await firestore.collection('UserData').doc('pARtPJpHyCo4JYmdm22A').get();
+    print(result['dailystudytime']);
+    print(result['semesterstudytime']);
+
+    //공부한 시간값들 가져옴
+    dailystudytime = result['dailystudytime'];
+    semesterstudytime = result['semesterstudytime'];
+  }
+
   @override
   void initState() {
     super.initState();
+    getData();
   }
 
   @override
@@ -105,18 +127,34 @@ class _TodolistState extends State<Todolist> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                  title: Text("공부한 시간을 입력하세요. ex) 2:30"),
-                                  content: TextField(
-                                    /*
-                                    onChanged: (String value) {
-                                      input = value;
-                                    },
-                                     */
-                                  ),
+                                  title: Text("공부를 완료했나요?"),
+                                  content: TextField(controller: inputData,
+                                  keyboardType: TextInputType.datetime,
+                                    decoration: InputDecoration(
+                                        labelText: '공부 시간 입력',
+                                        helperText: '시간, 분 형식으로 작성하세요',
+                                        hintText: '00:00',  //글자를 입력하면 사라진다.
+                                        icon: Icon(Icons.timer),
+                                        border: OutlineInputBorder(),
+                                        contentPadding: EdgeInsets.all(3)
+                                    ),
+
+                              ),
                                   actions: <Widget>[
                                     FlatButton(onPressed: (){
                                       setState(() {
                                         check_color[index] = Colors.blue;  //공부시간 입력후엔 체크버튼 색상 변경
+
+                                        var data = int.parse(inputData.text);
+                                        //일일공부시간 누적 저장
+                                        firestore.collection('UserData').doc('pARtPJpHyCo4JYmdm22A').update({'dailystudytime' : data+dailystudytime});
+
+                                        //학기공부시간 뉘적 저장
+                                        firestore.collection('UserData').doc('pARtPJpHyCo4JYmdm22A').update({'semesterstudytime' : data+semesterstudytime});
+
+
+
+
                                       });
                                       Navigator.of(context).pop();	// input 입력 후 창 닫히도록
                                     },

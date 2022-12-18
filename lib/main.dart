@@ -4,6 +4,8 @@ import 'package:studyrankingproject/DarkMode.dart';
 import 'package:studyrankingproject/LoginWedget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'Todolist.dart';
+
 Future<void> main() async {
 
   //UserBuilder test2 = UserBuilder("idTest", "passwordTest", "nicknameTest");
@@ -31,7 +33,7 @@ class _MyAppState extends State<MyApp> {
       valueListenable: darkModeSingleton.themeNotifier,
       builder: (_, ThemeMode currentMode, __){
         return MaterialApp(
-          home: LoginWidget(),
+          home: Todolist(),  //LoginWidget(),
           darkTheme: ThemeData.dark(),
           themeMode: currentMode,
         );
