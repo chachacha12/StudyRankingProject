@@ -33,12 +33,15 @@ class _MainWidgetState extends State<MainWidget> {
   Widget build(BuildContext context) {
     return  Scaffold(
 
-      appBar: AppBar(title: Text('Peer  Study'),
-          centerTitle: true,
-          elevation: 0.0,
-          actions: [
-        DarkMode().darkModeButton() //다크모드 사용을 위한 싱글톤 객체 가져옴
-      ]),
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(50.0),
+          child:AppBar(title: Text('Peer  Study'),
+              centerTitle: true,
+              elevation: 0.0,
+              actions: [
+                DarkMode().darkModeButton() //다크모드 사용을 위한 싱글톤 객체 가져옴
+              ])
+      ),
 
 
       //리스트안에 두 페이지 넣어서 유저가 바텀탭 누를때마다 각각 전환

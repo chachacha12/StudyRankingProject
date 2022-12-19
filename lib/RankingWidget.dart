@@ -22,20 +22,20 @@ class _StudyRankingState extends State<StudyRanking> {
     var studyTime;
     FirebaseFirestore.instance.collection("UserData").doc(temp).get().then(
             (DocumentSnapshot ds){
-              nickname = ds.get("nickname");
-              studyTime = ds.get("${_list[_index].getWhichRanking().toLowerCase()}studytime");
-              print(nickname);
-              print(studyTime);
-            });
+          nickname = ds.get("nickname");
+          studyTime = ds.get("${_list[_index].getWhichRanking().toLowerCase()}studytime");
+          print(nickname);
+          print(studyTime);
+        });
     _list[_index].updateRankerList();
     return Container(
         child: Column(
           children: [
             Container(
-              margin: EdgeInsets.fromLTRB(0, 32, 0, 32),
+              margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
             ),
             Container(
-                margin: EdgeInsets.symmetric(horizontal: 100,vertical: 10),
+                margin: EdgeInsets.symmetric(horizontal: 60,vertical: 10),
                 child: Text(_list[_index].getWhichRanking(),
                   style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                 )
@@ -47,57 +47,57 @@ class _StudyRankingState extends State<StudyRanking> {
                 )
             ),
             Container(
-              height: 500,
-              width: 340,
-              child:StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance.collection("UserData").orderBy("${_list[_index].getWhichRanking().toLowerCase()}studytime",descending:true ).limit(20).snapshots(),
-                builder: (context, snapshot) {
-                  final items = snapshot.data?.docs;
-                  return ListView.builder(
-                    itemCount: items?.length,
-                    itemBuilder: (context, index){
-                      final item =items?[index];
-                      return Container(
-                          decoration: BoxDecoration(
-                            border: Border(bottom: BorderSide(color: Colors.grey)),
-                          ),
-                          child:ListTile(
-                          leading: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-                            child:Text("${index+1})",
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)
-                          ,)
-                        ),
-                        title: Text(item?["nickname"],style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                height: 450,
+                width: 350,
+                child:StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance.collection("UserData").orderBy("${_list[_index].getWhichRanking().toLowerCase()}studytime",descending:true ).limit(20).snapshots(),
+                  builder: (context, snapshot) {
+                    final items = snapshot.data?.docs;
+                    return ListView.builder(
+                      itemCount: items?.length,
+                      itemBuilder: (context, index){
+                        final item =items?[index];
+                        return Container(
+                            decoration: BoxDecoration(
+                              border: Border(bottom: BorderSide(color: Colors.grey)),
+                            ),
+                            child:ListTile(
+                              leading: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                                  child:Text("${index+1})",
+                                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)
+                                    ,)
+                              ),
+                              title: Text(item?["nickname"],style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
 
-                        subtitle: Text(item!["${_list[_index].getWhichRanking().toLowerCase()}studytime"].toString()+"분"
-                        ,style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)
-                        ),
-                      )
-                      );
+                              subtitle: Text(item!["${_list[_index].getWhichRanking().toLowerCase()}studytime"].toString()+"분"
+                                  ,style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)
+                              ),
+                            )
+                        );
 
-                    },
-                  );
+                      },
+                    );
 
-                },
-              )
+                  },
+                )
             ),
 
             FutureBuilder(
-              future: FirebaseFirestore.instance.collection("UserData").doc(temp).get(),
-              builder: (context, snapshot) {
-                if(nickname == null){
-                  return ListTile(
-                    leading: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-                        child:Text("You",
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),)
-                    ),
-                    title: Text("nickname",style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-                    subtitle: Text("0분"
-                        ,style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)
-                    ),
-                  );
+                future: FirebaseFirestore.instance.collection("UserData").doc(temp).get(),
+                builder: (context, snapshot) {
+                  if(nickname == null){
+                    return ListTile(
+                      leading: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                          child:Text("You",
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),)
+                      ),
+                      title: Text("nickname",style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                      subtitle: Text("0분"
+                          ,style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)
+                      ),
+                    );
                   }
                   else{
                     print("오");
@@ -106,22 +106,23 @@ class _StudyRankingState extends State<StudyRanking> {
                           border: Border(bottom: BorderSide(color: Colors.grey), top: BorderSide(color: Colors.grey)),
                         ),
                         child : ListTile(
-                        leading: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-                          child:Text("You",
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),)
-                        ),
-                        title: Text(nickname,style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-                        subtitle: Text("$studyTime분"
-                          ,style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)
-                        ),
-                      )
+                          leading: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                              child:Text("You",
+                                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),)
+                          ),
+                          title: Text(nickname,style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                          subtitle: Text("$studyTime분"
+                              ,style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)
+                          ),
+                        )
                     );
                   }
                 }
             ),
 
             Container(
+              height: 60,
               child: TextButton(
                 child: Text("${_list[1-_index].getWhichRanking()} Ranking",
                     style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)
@@ -147,13 +148,3 @@ abstract class Ranking{
 
   Future<QuerySnapshot<Object?>> getUpdateRankerList();
 }
-/*
-
-자 정리를 해봅시다.
-RankingWidget
-_RankingWidgetState<<여기서 호출할 것들.
-Ranking을 받는 Semester Ranking, DailyRanking이런식으로..? 하면 될수도?
-
-
-*/
-
