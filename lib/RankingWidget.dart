@@ -46,7 +46,7 @@ class _StudyRankingState extends State<StudyRanking> {
                 )
             ),
             Container(
-                height: 450,
+                height: 370,
                 width: 350,
                 child:StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance.collection("UserData").orderBy("${_list[_index].
