@@ -27,7 +27,6 @@ class _StudyRankingState extends State<StudyRanking> {
           print(nickname);
           print(studyTime);
         });
-    _list[_index].updateRankerList();
     return Container(
         child: Column(
           children: [
@@ -50,13 +49,17 @@ class _StudyRankingState extends State<StudyRanking> {
                 height: 450,
                 width: 350,
                 child:StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance.collection("UserData").orderBy("${_list[_index].getWhichRanking().toLowerCase()}studytime",descending:true ).limit(20).snapshots(),
+                  stream: FirebaseFirestore.instance.collection("UserData").orderBy("${_list[_index].
+                  getWhichRanking().toLowerCase()}studytime",descending:true ).limit(20).snapshots(),
                   builder: (context, snapshot) {
                     final items = snapshot.data?.docs;
-                    return ListView.builder(
-                      itemCount: items?.length,
+                    if(items ==null){
+                      return Container();
+                    }
+                    else {return ListView.builder(
+                      itemCount: items.length,
                       itemBuilder: (context, index){
-                        final item =items?[index];
+                        final item =items[index];
                         return Container(
                             decoration: BoxDecoration(
                               border: Border(bottom: BorderSide(color: Colors.grey)),
@@ -68,17 +71,15 @@ class _StudyRankingState extends State<StudyRanking> {
                                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)
                                     ,)
                               ),
-                              title: Text(item?["nickname"],style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-
-                              subtitle: Text(item!["${_list[_index].getWhichRanking().toLowerCase()}studytime"].toString()+"분"
+                              title: Text(item["nickname"],style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                              subtitle: Text(item["${_list[_index].getWhichRanking().toLowerCase()}studytime"].toString()+"분"
                                   ,style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)
                               ),
                             )
                         );
-
                       },
                     );
-
+                    }
                   },
                 )
             ),
@@ -100,7 +101,6 @@ class _StudyRankingState extends State<StudyRanking> {
                     );
                   }
                   else{
-                    print("오");
                     return Container(
                         decoration: BoxDecoration(
                           border: Border(bottom: BorderSide(color: Colors.grey), top: BorderSide(color: Colors.grey)),
@@ -141,10 +141,5 @@ class _StudyRankingState extends State<StudyRanking> {
 }
 
 abstract class Ranking{
-  late List _rankerList;
-  Future<void> updateRankerList();
   String getWhichRanking();
-  get rankerList => _rankerList;
-
-  Future<QuerySnapshot<Object?>> getUpdateRankerList();
 }

@@ -27,18 +27,15 @@ class _EnrollWidget extends State<StatefulWidget>{
   bool isFemale = false;
   bool isUnselect = false;
   late List<bool> isSelected = [isMale,isFemale,isUnselect];
-  Future<void> _checkEmail(enroll_email, enroll_password, UserDetail newUser) async {
+  Future<void> _checkEmail(UserDetail newUser) async {
     try {
-      print("어디까지되나1");
-      UserCredential enrollUser = await FirebaseAuth.instance
+      await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
-          email: enroll_email, password: enroll_password).
+          email: newUser.id, password: newUser.password).
       then((value) {
         if (value.user!.email == null) {
-          print("어디까지되나1");
         }
         else {
-          print("어디까지되나1");
           Map<String,dynamic> data = {
             'id':newUser.id,
             'nickname':newUser.nickname,
@@ -52,7 +49,6 @@ class _EnrollWidget extends State<StatefulWidget>{
           firestore.collection('UserData').doc(auth.currentUser!.uid).set(data);
           Navigator.pop(context);
         }
-        print("어디까지되나1");
         return value;
       });
     }
@@ -227,7 +223,7 @@ class _EnrollWidget extends State<StatefulWidget>{
                                         print(_universityController.text);
                                         print(_genderController.toString());
                                         UserDetail newUser = UserDetail(enrollUserData);
-                                        _checkEmail(_idController.text,_pwController.text,newUser);
+                                        _checkEmail(newUser);
                                         },
                                       child: Text("회원가입",
                                           style: TextStyle(color: Colors.white)

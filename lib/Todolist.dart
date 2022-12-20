@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -32,7 +31,7 @@ class _TodolistState extends State<Todolist> {
 
   //누적공부시간 일일 공부시간 데이터 가져오기
   getData() async {
-    var result = await firestore.collection('UserData').doc('pARtPJpHyCo4JYmdm22A').get();
+    var result = await firestore.collection('UserData').doc(auth.currentUser!.uid).get();
     print(result['dailystudytime']);
     print(result['semesterstudytime']);
 
@@ -64,7 +63,7 @@ class _TodolistState extends State<Todolist> {
                       },
                     ),
                     actions: <Widget>[
-                      FlatButton(onPressed: (){
+                      TextButton(onPressed: (){
                         setState(() {
                           todos.add(input);
                           check_color.add(Colors.grey);
@@ -148,7 +147,7 @@ class _TodolistState extends State<Todolist> {
 
                               ),
                                   actions: <Widget>[
-                                    FlatButton(onPressed: (){
+                                    TextButton(onPressed: (){
                                       setState(() {
                                         check_color[index] = Colors.blue;  //공부시간 입력후엔 체크버튼 색상 변경
 
@@ -158,9 +157,9 @@ class _TodolistState extends State<Todolist> {
                                         var data = hour*60 + min;
 
                                         //일일공부시간 누적 저장
-                                        firestore.collection('UserData').doc(auth.currentUser?.uid).update({'dailystudytime' : data+dailystudytime});
+                                        firestore.collection('UserData').doc(auth.currentUser!.uid).update({'dailystudytime' : data+dailystudytime});
                                         //학기공부시간 뉘적 저장
-                                        firestore.collection('UserData').doc(auth.currentUser?.uid).update({'semesterstudytime' : data+semesterstudytime});
+                                        firestore.collection('UserData').doc(auth.currentUser!.uid).update({'semesterstudytime' : data+semesterstudytime});
 
                                         //값 업데이트
                                         dailystudytime =  data+dailystudytime;
