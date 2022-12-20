@@ -9,6 +9,8 @@ import 'DarkMode.dart';
 import 'RankingWidget.dart';
 import 'Todolist.dart';
 
+
+
 class StateNotifier extends ChangeNotifier {
 
   var tab =0;  //바텀바에서 유저가 누를때 페이지전환 시켜주기위한 state
